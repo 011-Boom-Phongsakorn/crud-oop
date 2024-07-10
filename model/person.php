@@ -42,16 +42,21 @@ class Person
 
     public function saveToDatabase($conn)
     {
-
+        $p1 = $this->getName();
+        $p2 = $this->getAge();
+        $p3 = $this->address->getStreet();
+        $p4 = $this->address->getCity();
+        $p5 = $this->address->getState();
+        $p6 = $this->address->getPostalCode();
         $stmt = $conn->prepare("INSERT INTO persons (name, age, street, city, state, postal_code) VALUES (?, ?, ?, ?, ?, ?)");
         $stmt->bind_param(
             "sissss",
-            $this->getName(),
-            $this->getAge(),
-            $this->address->getStreet(),
-            $this->address->getCity(),
-            $this->address->getState(),
-            $this->address->getPostalCode()
+            $p1,
+            $p2,
+            $p3,
+            $p4,
+            $p5,
+            $p6
         );
         $stmt->execute();
         $stmt->close();
@@ -76,21 +81,16 @@ class Person
 
     public function updateInDatabase($conn)
     {
-        $p1 = $this->getName();
-        $p2 = $this->getAge();
-        $p3 = $this->address->getStreet();
-        $p4 = $this->address->getCity();
-        $p5 = $this->address->getState();
-        $p6 = $this->address->getPostalCode();
-        $stmt = $conn->prepare("INSERT INTO persons (name, age, street, city, state, postal_code) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("UPDATE persons SET name=?, age=?, street=?, city=?, state=?, postal_code=? WHERE id=?");
         $stmt->bind_param(
-            "sissss",
-            $p1,
-            $p2,
-            $p3,
-            $p4,
-            $p5,
-            $p6
+            "sissssi",
+            $this->getName(),
+            $this->getAge(),
+            $this->address->getStreet(),
+            $this->address->getCity(),
+            $this->address->getState(),
+            $this->address->getPostalCode(),
+            $this->getId()
         );
         $stmt->execute();
         $stmt->close();
